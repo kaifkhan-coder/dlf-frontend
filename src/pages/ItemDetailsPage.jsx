@@ -39,7 +39,7 @@ export default function ItemDetailsPage() {
       <div className="mt-4 bg-white border rounded-2xl overflow-hidden">
         <div className="h-72 bg-slate-100">
           <img
-            src={item.image || `https://picsum.photos/seed/${item._id}/900/500`}
+            src={item.image || "/no-image.png" || `https://picsum.photos/seed/${item._id}/700/500`}
             alt={item.title}
             className="w-full h-full object-cover"
           />

@@ -391,7 +391,7 @@ function PendingItemCard({ item, onUpdate }) {
       <div className="group bg-white border border-slate-100 rounded-2xl p-4 flex flex-col md:flex-row gap-5 hover:shadow-xl hover:shadow-slate-200/50 transition-all duration-300">
         <div className="relative w-full md:w-48 h-40 md:h-auto flex-shrink-0 overflow-hidden rounded-xl bg-slate-100">
           <img
-            src={item.image || `https://picsum.photos/seed/${item._id}/500/300`}
+            src={item.image || "no-image.png" || `https://picsum.photos/seed/${item._id}/400/300`}
             alt={item.title}
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
           />

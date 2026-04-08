@@ -123,71 +123,90 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { apiGet } from "../services/api";
+import { apiPost } from "../services/api";
 
 export default function ClaimItemPage() {
   const { id } = useParams();
   const [item, setItem] = useState(null);
 
+  const [form, setForm] = useState({
+    userName: "",
+    studentId: "",
+    proofText: ""
+  });
+
+  const [msg, setMsg] = useState("");
+
   useEffect(() => {
     const load = async () => {
-      try {
-        const res = await apiGet(`/api/items/${id}`);
-        setItem(res.item);
-      } catch (err) {
-        console.log(err);
-      }
+      const res = await apiGet(`/api/items/${id}`);
+      setItem(res.item);
     };
     load();
   }, [id]);
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const res = await apiPost("/api/claims", {
+      itemId: id,
+      ...form
+    });
+
+    setMsg(res.message);
+  };
+
   if (!item) return <div className="p-10">Loading...</div>;
 
   return (
-    <div className="min-h-screen bg-slate-100 flex justify-center items-center p-4">
+    <div className="min-h-screen flex justify-center items-center bg-slate-100 p-4">
       <div className="bg-white rounded-2xl shadow-xl max-w-md w-full overflow-hidden">
-        
-        {/* IMAGE */}
+
         <img
-          src={item.image || `https://picsum.photos/seed/${item._id}/500/300`}
-          alt={item.title}
+          src={item.image}
           className="w-full h-56 object-cover"
         />
 
-        {/* CONTENT */}
         <div className="p-5">
-          <h1 className="text-xl font-bold text-slate-900">
-            {item.title}
-          </h1>
+          <h1 className="text-xl font-bold">{item.title}</h1>
 
-          <p className="text-slate-600 text-sm mt-1">
-            {item.category}
+          <p className="text-sm text-slate-600">
+            {item.location}
           </p>
 
-          {/* CARDS */}
-          <div className="grid grid-cols-2 gap-3 mt-4 text-sm">
+          <form onSubmit={handleSubmit} className="mt-4 space-y-3">
 
-            <Card label="📍 Location" value={item.location || "Kurla West"} />
-            <Card label="🆔 ID" value={item._id} />
-            <Card label="📅 Date" value={item.date || "-"} />
-            <Card label="🎨 Color" value={item.color || "-"} />
+            <input
+              placeholder="Your Name"
+              className="w-full p-3 border rounded-xl"
+              onChange={(e) => setForm({...form, userName: e.target.value})}
+            />
 
-          </div>
+            <input
+              placeholder="Student ID"
+              className="w-full p-3 border rounded-xl"
+              onChange={(e) => setForm({...form, studentId: e.target.value})}
+            />
 
-          {/* BUTTON */}
-          <button className="mt-5 w-full bg-blue-600 text-white py-2 rounded-xl font-semibold hover:bg-blue-700">
-            Claim This Item
-          </button>
+            <textarea
+              placeholder="Proof details"
+              className="w-full p-3 border rounded-xl"
+              onChange={(e) => setForm({...form, proofText: e.target.value})}
+            />
+
+            <button className="w-full bg-blue-600 text-white py-3 rounded-xl">
+              Submit Claim
+            </button>
+
+          </form>
+
+          {msg && (
+            <p className="mt-3 text-center text-green-600 font-semibold">
+              {msg}
+            </p>
+          )}
         </div>
       </div>
-    </div>
-  );
-}
-
-function Card({ label, value }) {
-  return (
-    <div className="bg-slate-50 p-3 rounded-xl border">
-      <p className="text-xs text-slate-500">{label}</p>
-      <p className="font-semibold text-slate-900 mt-1">{value}</p>
     </div>
   );
 }

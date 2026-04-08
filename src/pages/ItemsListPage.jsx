@@ -67,7 +67,7 @@ export default function ItemsListPage({ initialData }) {
     const set = new Set(items.map((i) => i.category).filter(Boolean));
     return ["ALL", ...Array.from(set)];
   }, [items]);
-
+console.log(items);
   const filtered = useMemo(() => {
     return items.filter((it) => {
       const matchesQ =
@@ -78,7 +78,7 @@ export default function ItemsListPage({ initialData }) {
       const matchesType = type === "ALL" ? true : it.type === type;
       const matchesCat = category === "ALL" ? true : it.category === category;
 
-      const okStatus = it.status !== "PENDING";
+const okStatus = true;
       return matchesQ && matchesType && matchesCat && okStatus;
     });
   }, [items, q, type, category]);
@@ -211,7 +211,7 @@ function ItemCard({ item }) {
         <motion.img
           whileHover={{ scale: 1.05 }}
           transition={{ duration: 0.6 }}
-          src={item.image || `https://picsum.photos/seed/${item._id}/700/500`}
+src={item.image ? item.image : "/no-image.png"}
           alt={item.title}
           className="w-full h-full object-cover"
         />

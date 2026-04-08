@@ -5,11 +5,11 @@ import { apiGet, apiPost } from "../services/api";
 export default function ClaimPage() {
   const { id } = useParams();
   const [item, setItem] = useState(null);
-
+  const [msg, setMsg] = useState("");
+  const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
     name: "",
     email: "",
-    color: "",
     description: "",
   });
 
@@ -30,9 +30,9 @@ export default function ClaimPage() {
 
     try {
       await apiPost(`/api/claims/${id}`, form);
-      alert("✅ Claim submitted successfully");
+      setMsg("✅ Claim submitted successfully");
     } catch (err) {
-      alert("Error submitting claim");
+      setMsg("Error submitting claim");
     }
   };
 
@@ -41,13 +41,16 @@ export default function ClaimPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-100 p-4">
       <div className="bg-white p-6 rounded-xl shadow-xl max-w-xl w-full">
+        
         <h1 className="text-2xl font-bold mb-4 text-center">
           🚀 NEW Claim Page
         </h1>
 
+        {/* ✅ FIXED IMAGE */}
         <img
-          src={item.image || `https://picsum.photos/seed/${item._id}/400/250`}
-          className="w-full h-48 object-cover rounded-lg"
+          src={item.image || "/no-image.png"}
+          alt={item.title}
+          className="w-full h-48 object-cover rounded-lg mb-4"
         />
 
         <h2 className="text-xl font-bold mt-3">{item.title}</h2>
@@ -81,6 +84,7 @@ export default function ClaimPage() {
             Submit Claim
           </button>
         </form>
+
       </div>
     </div>
   );
