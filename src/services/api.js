@@ -1,5 +1,5 @@
 // const API = "http://localhost:8000"; 
-const API = "https://dlf-10.onrender.com";
+const API = "https://dlf-backend-hoi7.onrender.com"; // production backend URL
 function getToken() {
   return localStorage.getItem("token");
 }
@@ -49,7 +49,7 @@ export async function apiPatch(path, body) {
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://localhost:8000",
+  baseURL: API,
 });
 
 api.interceptors.request.use((config) => {

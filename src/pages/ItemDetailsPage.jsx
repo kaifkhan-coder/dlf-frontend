@@ -9,7 +9,7 @@ export default function ItemDetailsPage() {
   const [qr, setQr] = useState("");
   useEffect(() => {
   if (item?._id) {
-    QRCode.toDataURL(`https://dlf-ya3g.vercel.app/claim/${item._id}`)
+    QRCode.toDataURL(`https://dlf-frontend-n5gn.vercel.app//claim/${item._id}`)
       .then(setQr)
       .catch(console.error);
   }
