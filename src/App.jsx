@@ -15,7 +15,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 
 import ProtectedRoute from "./components/ProtectedRoute";
 import AdminRoute from "./components/AdminRoute";
-import ClaimItem from "./pages/ClaimItem";
+import ClaimPage from "./pages/ClaimPage";
 
 export default function App() {
   return (
@@ -29,7 +29,7 @@ export default function App() {
         {/* public */}
         <Route path="/items" element={<ItemsListPage />} />
         <Route path="/item/:id" element={<ItemDetailsPage />} />
-        <Route path="/claim/:id" element={<ClaimItem/>} />
+        <Route path="/claim/:id" element={<ClaimPage/>} />
         {/* user protected */}
         <Route
           path="/report"

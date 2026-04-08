@@ -98,7 +98,7 @@ export default function AdminDashboard() {
   // --- Approve / Reject / Returned ---
   const updateStatus = async (id, status) => {
     try {
-      await apiPatch(`/api/admin/items/${id}/status`, { status });
+      await apiPatch(`//admin/items/${id}/status`, { status });
       await refresh();
     } catch (e) {
       alert(e.message || "Failed");

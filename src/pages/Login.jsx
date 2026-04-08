@@ -336,7 +336,7 @@ const loginSchema = z.object({
 export function Login() {
   const [loading, setLoading] = useState(false);
   const nav = useNavigate();
-
+  const [showPassword, setShowPassword] = useState(false);
   const { 
     register, 
     handleSubmit, 
@@ -417,18 +417,35 @@ export function Login() {
             )}
           </div>
 
-          <div className="space-y-1">
-            <label className="text-[10px] font-black uppercase text-slate-500 ml-1 tracking-widest">Access Key</label>
-            <input
-              type="password"
-              {...register('password')}
-              className="w-full bg-black/50 border-2 border-slate-800 px-4 py-4 rounded-lg focus:outline-none focus:border-fuchsia-500 transition-all placeholder:text-slate-700 text-white font-bold"
-              placeholder="••••••••••••"
-            />
-            {errors.password && (
-              <p className="text-rose-500 text-[10px] font-black uppercase mt-1 italic">{errors.password.message}</p>
-            )}
-          </div>
+<div className="space-y-1 relative">
+  <label className="text-[10px] font-black uppercase text-slate-500 ml-1 tracking-widest">
+    Access Key
+  </label>
+
+  <div className="relative">
+    <input
+      type={showPassword ? "text" : "password"}
+      {...register('password')}
+      className="w-full bg-black/50 border-2 border-slate-800 px-4 py-4 pr-12 rounded-lg focus:outline-none focus:border-fuchsia-500 transition-all placeholder:text-slate-700 text-white font-bold"
+      placeholder="••••••••••••"
+    />
+
+    {/* 👁 Show / Hide Button */}
+    <button
+      type="button"
+      onClick={() => setShowPassword(!showPassword)}
+      className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white transition"
+    >
+      {showPassword ? "🙈" : "👁"}
+    </button>
+  </div>
+
+  {errors.password && (
+    <p className="text-rose-500 text-[10px] font-black uppercase mt-1 italic">
+      {errors.password.message}
+    </p>
+  )}
+</div>
 
           <motion.button
             whileHover={{ scale: 1.02, boxShadow: '0 0 20px rgba(34, 211, 238, 0.4)' }}
