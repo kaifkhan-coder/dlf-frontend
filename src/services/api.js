@@ -1,5 +1,5 @@
 // const API = "http://localhost:8000"; 
-const API = "https://dlf-backend-hoi7.onrender.com"; // production backend URL
+const API = "https://dlf-backend-2.onrender.com"; // production backend URL
 function getToken() {
   return localStorage.getItem("token");
 }
