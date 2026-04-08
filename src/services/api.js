@@ -1,62 +1,64 @@
-// const API = "http://localhost:8000"; 
-const API = "https://dlf-backend-2.onrender.com"; // production backend URL
+const API = import.meta.env.VITE_API_URL; // ✅ use env
+
 function getToken() {
   return localStorage.getItem("token");
 }
 
-export async function apiGet(path) {
-  const token = localStorage.getItem("token");
+// ✅ COMMON REQUEST FUNCTION
+async function request(path, { method = "GET", body } = {}) {
+  const headers = {};
+  const token = getToken();
+
+  // ✅ Add token only if exists
+  if (token) {
+    headers["Authorization"] = `Bearer ${token}`;
+  }
+
+  // ✅ Handle JSON vs FormData
+  let finalBody = body;
+
+  if (body && !(body instanceof FormData)) {
+    headers["Content-Type"] = "application/json";
+    finalBody = JSON.stringify(body);
+  }
 
   const res = await fetch(`${API}${path}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
+    method,
+    headers,
+    body: finalBody,
   });
 
-  const data = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(data.message || "API error");
+  let data = {};
+  const text = await res.text();
+
+  if (text) {
+    try {
+      data = JSON.parse(text);
+    } catch {
+      data = { message: text };
+    }
+  }
+
+  if (!res.ok) {
+    throw new Error(data.message || `API error (${res.status})`);
+  }
+
   return data;
 }
 
-export async function apiPost(path, body) {
-  const res = await fetch(`${API}${path}`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${getToken()}`,
-    },
-    body: JSON.stringify(body),
-  });
-  const data = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(data.message || "API error");
-  return data;
-}
+// ✅ EXPORT FUNCTIONS
+export const apiGet = (path) => request(path);
 
-export async function apiPatch(path, body) {
-  const res = await fetch(`${API}${path}`, {
-    method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${getToken()}`,
-    },
-    body: JSON.stringify(body),
-  });
-  const data = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(data.message || "API error");
-  return data;
-}
+export const apiPost = (path, body) =>
+  request(path, { method: "POST", body });
 
-import axios from "axios";
+export const apiPatch = (path, body) =>
+  request(path, { method: "PATCH", body });
 
-const api = axios.create({
-  baseURL: API,
-});
+export const apiDelete = (path) =>
+  request(path, { method: "DELETE" });
 
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem("token");
-  if (token) config.headers.Authorization = `Bearer ${token}`;
-  return config;
-});
+
 
 // export const apiPost = async (url, body) => {
 //   try {
@@ -68,7 +70,7 @@ api.interceptors.request.use((config) => {
 //   }
 // };
 
-export default api;
+// export default api;
 
 // const API = "http://localhost:8000";
 
