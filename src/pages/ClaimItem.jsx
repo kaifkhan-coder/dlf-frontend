@@ -137,24 +137,38 @@ export default function ClaimItemPage() {
 
   const [msg, setMsg] = useState("");
 
-  useEffect(() => {
-    const load = async () => {
+useEffect(() => {
+  const load = async () => {
+    try {
       const res = await apiGet(`/api/items/${id}`);
       setItem(res.item);
-    };
-    load();
-  }, [id]);
+    } catch (err) {
+      console.error(err);
+      setMsg("Failed to load item ❌");
+    }
+  };
+  load();
+}, [id]);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
+  if (!form.userName || !form.studentId || !form.proofText) {
+    setMsg("Please fill all fields ❗");
+    return;
+  }
+
+  try {
     const res = await apiPost("/api/claims", {
       itemId: id,
       ...form
     });
 
-    setMsg(res.message);
-  };
+    setMsg(res.message || "Claim submitted ✅");
+  } catch (err) {
+    setMsg(err.message || "Submission failed ❌");
+  }
+};
 
   if (!item) return <div className="p-10">Loading...</div>;
 
@@ -162,10 +176,11 @@ export default function ClaimItemPage() {
     <div className="min-h-screen flex justify-center items-center bg-slate-100 p-4">
       <div className="bg-white rounded-2xl shadow-xl max-w-md w-full overflow-hidden">
 
-        <img
-          src={item.image}
-          className="w-full h-56 object-cover"
-        />
+<img
+  src={item.image || "https://via.placeholder.com/400x200"}
+  className="w-full h-56 object-cover"
+  alt="item"
+/>
 
         <div className="p-5">
           <h1 className="text-xl font-bold">{item.title}</h1>
