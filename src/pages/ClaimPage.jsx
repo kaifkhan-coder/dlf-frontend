@@ -16,7 +16,12 @@ export default function ClaimPage() {
   useEffect(() => {
     const load = async () => {
       try {
-        const res = await apiGet(`/api/items/${id}`);
+        const res = await apiPost(`/api/claims`, {
+  itemId: id,
+  userName: form.name,
+  studentId: form.email,
+  proofText: form.description
+});
         setItem(res.item);
       } catch (err) {
         console.error(err);
@@ -25,16 +30,19 @@ export default function ClaimPage() {
     load();
   }, [id]);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  console.log("Submitting...", form);
 
-    try {
-      await apiPost(`/api/claims/${id}`, form);
-      setMsg("✅ Claim submitted successfully");
-    } catch (err) {
-      setMsg("Error submitting claim");
-    }
-  };
+  try {
+    const res = await apiPost(`/api/claims`, { ...form, itemId: id });
+    console.log("Response:", res);
+    setMsg("✅ Claim submitted successfully");
+  } catch (err) {
+    console.error("ERROR:", err);
+    setMsg(err.message || "Error submitting claim");
+  }
+};
 
   if (!item) return <p className="p-10">Loading NEW PAGE 🚀</p>;
 
@@ -80,7 +88,7 @@ export default function ClaimPage() {
             }
           />
 
-          <button className="w-full bg-blue-600 text-white py-2 rounded">
+          <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded">
             Submit Claim
           </button>
         </form>
