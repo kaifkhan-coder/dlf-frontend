@@ -16,6 +16,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AdminRoute from "./components/AdminRoute";
 import ClaimPage from "./pages/ClaimPage";
+import AdminClaimsPage from "./pages/AdminClaims";
 
 export default function App() {
   return (
@@ -30,6 +31,7 @@ export default function App() {
         <Route path="/items" element={<ItemsListPage />} />
         <Route path="/item/:id" element={<ItemDetailsPage />} />
         <Route path="/claim/:id" element={<ClaimPage/>} />
+        <Route path="/admin-approval/:id" element={<AdminClaimsPage/>} />
         {/* user protected */}
         <Route
           path="/report"
