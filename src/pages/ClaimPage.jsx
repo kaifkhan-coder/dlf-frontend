@@ -28,15 +28,23 @@ useEffect(() => {
 
 const handleSubmit = async (e) => {
   e.preventDefault();
-  console.log("Submitting...", form);
+  setLoading(true);
 
   try {
-    const res = await apiPost(`/api/claims`, { ...form, itemId: id });
+const res = await apiPost(`/api/claims`, {
+  itemId: id,
+  userName: form.name,
+  studentId: form.email,     // or real student ID if you have
+  proofText: form.description,
+});
+
     console.log("Response:", res);
     setMsg("✅ Claim submitted successfully");
   } catch (err) {
     console.error("ERROR:", err);
     setMsg(err.message || "Error submitting claim");
+  } finally {
+    setLoading(false);
   }
 };
 
@@ -51,11 +59,15 @@ const handleSubmit = async (e) => {
         </h1>
 
         {/* ✅ FIXED IMAGE */}
-        <img
-          src={item.image || "/no-image.png"}
-          alt={item.title}
-          className="w-full h-48 object-cover rounded-lg mb-4"
-        />
+<img
+  src={
+    item.image
+      ? `http://localhost:8000/${item.image}`
+      : "/no-image.png"
+  }
+  alt={item.title}
+  className="w-full h-48 object-cover rounded-lg mb-4"
+/>
 
         <h2 className="text-xl font-bold mt-3">{item.title}</h2>
 
@@ -84,11 +96,19 @@ const handleSubmit = async (e) => {
             }
           />
 
-          <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded">
-            Submit Claim
-          </button>
+<button
+  type="submit"
+  disabled={loading}
+  className="w-full bg-blue-600 text-white py-2 rounded"
+>
+  {loading ? "Submitting..." : "Submit Claim"}
+</button>
         </form>
-
+        {msg && (
+  <p className="mt-4 text-center text-red-500 font-bold">
+    {msg}
+  </p>
+)}
       </div>
     </div>
   );
