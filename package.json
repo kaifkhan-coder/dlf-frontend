@@ -13,6 +13,8 @@
     "@hookform/resolvers": "^5.2.2",
     "@tailwindcss/vite": "^4.1.18",
     "axios": "^1.14.0",
+    "canvas": "^3.2.3",
+    "canvas-confetti": "^1.9.4",
     "clsx": "^2.1.1",
     "framer-motion": "^12.34.2",
     "jwt-decode": "^4.0.0",
