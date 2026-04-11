@@ -108,7 +108,7 @@ const loadClaims = async () => {
   // --- Approve / Reject / Returned ---
   const updateStatus = async (id, status) => {
     try {
-      await apiPatch(`/admin/items/${id}/status`, { status });
+      await apiPatch(`/api/admin/items/${id}/status`, { status });
       await refresh();
     } catch (e) {
       alert(e.message || "Failed");
@@ -178,12 +178,12 @@ const loadClaims = async () => {
   };
 
 const approveClaim = async (id) => {
-  await apiPatch(`/api/claims/${id}/approve`);
+  await apiPatch(`/api/admin/claims/${id}/approve`);
   loadClaims();
 };
 
 const rejectClaim = async (id) => {
-  await apiPatch(`/api/claims/${id}/reject`);
+  await apiPatch(`/api/admin/claims/${id}/reject`);
   loadClaims();
 };
   return (
@@ -351,14 +351,55 @@ const rejectClaim = async (id) => {
             </TiltCard>
           </div>
         </div>
-        {claims.map((c) => (
-  <div key={c._id} className="border p-3 mb-3">
-    <p><b>Item:</b> {c.itemId?.title}</p>
-    <p><b>User:</b> {c.userName}</p>
-    <p><b>Proof:</b> {c.proofText}</p>
+{claims.map((c) => (
+  <div
+    key={c._id}
+    className="border border-slate-200 rounded-xl p-5 flex flex-col md:flex-row gap-5 hover:shadow-md transition"
+  >
 
-    <button onClick={() => approve(c._id)}>Approve</button>
-    <button onClick={() => reject(c._id)}>Reject</button>
+    {/* LEFT: ITEM IMAGE */}
+    <img
+      src={c.itemId?.image || "/no-image.png"}
+      alt="item"
+      className="w-32 h-32 object-cover rounded-lg"
+    />
+
+    {/* CENTER: DETAILS */}
+    <div className="flex-1">
+      <h3 className="text-lg font-bold text-slate-900">
+        {c.itemId?.title || "Unknown Item"} - <span className="text-sm font-medium text-slate-500">{c.status}</span>
+      </h3>
+
+      <p className="text-sm text-slate-500">
+        Claimed by: {c.userName || "Unknown User"}
+      </p>
+
+      <p className="text-sm text-slate-500">
+        Student ID: {c.studentId || "N/A"}
+      </p>
+
+      <p className="text-sm text-slate-600 mt-2">
+        {c.proofText || "No proof details provided."}
+      </p>
+    </div>
+
+    {/* RIGHT: ACTIONS */}
+    <div className="flex flex-col gap-2">
+      <button
+        onClick={() => approveClaim(c._id)}
+        className="px-4 py-2 rounded-lg bg-green-600 text-white text-sm font-semibold"
+      >
+        Approve
+      </button>
+
+      <button
+        onClick={() => rejectClaim(c._id)}
+        className="px-4 py-2 rounded-lg bg-red-500 text-white text-sm font-semibold"
+      >
+        Reject
+      </button>
+    </div>
+
   </div>
 ))}
         <div className="h-20" />
