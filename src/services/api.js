@@ -179,7 +179,9 @@ async function request(path, { method = "GET", body } = {}) {
     clearTimeout(timeout);
   }
 }
-
+const approveClaim = async (id) => {
+  await apiPost(`/api/claims/${id}/approve`);
+};
 export const apiGet = (path) => request(path);
 export const apiPost = (path, body) => request(path, { method: "POST", body });
 export const apiPatch = (path, body) => request(path, { method: "PATCH", body });
