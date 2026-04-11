@@ -141,7 +141,8 @@ useEffect(() => {
   const load = async () => {
     try {
       const res = await apiGet(`/api/items/${id}`);
-      setItem(res.item);
+      console.log("Item details:", res);
+      setItem(res);
     } catch (err) {
       console.error(err);
       setMsg("Failed to load item ❌");

@@ -37,7 +37,12 @@ const res = await apiPost(`/api/claims`, {
   studentId: form.email,     // or real student ID if you have
   proofText: form.description,
 });
-
+console.log("Sending:", {
+  itemId: id,
+  userName: form.name,
+  studentId: form.email,
+  proofText: form.description
+});
     console.log("Response:", res);
     setMsg("✅ Claim submitted successfully");
   } catch (err) {
@@ -60,15 +65,10 @@ const res = await apiPost(`/api/claims`, {
 
         {/* ✅ FIXED IMAGE */}
 <img
-  src={
-    item.image
-      ? `http://localhost:8000/${item.image}`
-      : "/no-image.png"
-  }
-  alt={item.title}
+  src={item?.image ? item.image : "/no-image.png"}
+  alt={item?.title}
   className="w-full h-48 object-cover rounded-lg mb-4"
 />
-
         <h2 className="text-xl font-bold mt-3">{item.title}</h2>
 
         <form onSubmit={handleSubmit} className="mt-6 space-y-4">

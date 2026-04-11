@@ -61,7 +61,16 @@ export default function AdminDashboard() {
   const [aiReport, setAiReport] = useState("");
   const [matches, setMatches] = useState([]);
   const [show, setShow] = useState(false);
+  const [claims, setClaims] = useState([]);
 
+const loadClaims = async () => {
+  try {
+    const data = await apiGet("/api/claims");
+    setClaims(data);
+  } catch (err) {
+    console.log(err);
+  }
+};
   const refresh = async () => {
     setLoading(true);
     try {
@@ -76,6 +85,7 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     refresh();
+    loadClaims();
     setTimeout(() => setShow(true), 100);
   }, []);
 
@@ -98,7 +108,7 @@ export default function AdminDashboard() {
   // --- Approve / Reject / Returned ---
   const updateStatus = async (id, status) => {
     try {
-      await apiPatch(`//admin/items/${id}/status`, { status });
+      await apiPatch(`/admin/items/${id}/status`, { status });
       await refresh();
     } catch (e) {
       alert(e.message || "Failed");
@@ -167,6 +177,15 @@ export default function AdminDashboard() {
     setMatches(suggestions.slice(0, 12));
   };
 
+const approveClaim = async (id) => {
+  await apiPatch(`/api/claims/${id}/approve`);
+  loadClaims();
+};
+
+const rejectClaim = async (id) => {
+  await apiPatch(`/api/claims/${id}/reject`);
+  loadClaims();
+};
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 font-sans selection:bg-blue-100">
       <div
@@ -332,7 +351,16 @@ export default function AdminDashboard() {
             </TiltCard>
           </div>
         </div>
+        {claims.map((c) => (
+  <div key={c._id} className="border p-3 mb-3">
+    <p><b>Item:</b> {c.itemId?.title}</p>
+    <p><b>User:</b> {c.userName}</p>
+    <p><b>Proof:</b> {c.proofText}</p>
 
+    <button onClick={() => approve(c._id)}>Approve</button>
+    <button onClick={() => reject(c._id)}>Reject</button>
+  </div>
+))}
         <div className="h-20" />
       </div>
     </div>
