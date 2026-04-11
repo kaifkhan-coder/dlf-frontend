@@ -13,22 +13,18 @@ export default function ClaimPage() {
     description: "",
   });
 
-  useEffect(() => {
-    const load = async () => {
-      try {
-        const res = await apiPost(`/api/claims`, {
-  itemId: id,
-  userName: form.name,
-  studentId: form.email,
-  proofText: form.description
-});
-        setItem(res.item);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-    load();
-  }, [id]);
+useEffect(() => {
+  const load = async () => {
+    try {
+      const res = await apiGet(`/api/items/${id}`);
+      setItem(res);
+    } catch (err) {
+      console.error(err);
+      setMsg("Failed to load item details - " + (err.message || "Unknown error") );
+    }
+  };
+  load();
+}, [id]);
 
 const handleSubmit = async (e) => {
   e.preventDefault();

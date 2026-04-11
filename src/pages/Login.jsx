@@ -80,7 +80,7 @@ export default function UserDashboard() {
 
   const handleLogout = () => {
     localStorage.clear();
-    window.location.href = '/login';
+nav("/login");
   };
 
   return (

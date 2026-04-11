@@ -477,12 +477,12 @@ export default function ProfilePage() {
       const res = await apiPatch("/api/users/profile-photo", { image: photo });
       // Update local storage and state
       localStorage.setItem("user", JSON.stringify(res.user));
-      setUser(res.user);
-      setMsg(res.message || "Profile photo updated ✅");
       // Reset photo state so 'Save' button hides until next change if desired,
       // but logic implies we keep 'photo' as current. 
       // We'll clear the 'unsaved' state implicitly by matching preview to user data if we wanted,
       // but here we just leave it as is to show success.
+      setUser(res.user);
+      setMsg(res.message || "Profile photo updated ✅");
     } catch (e: any) {
       setErr(e.message || "Failed to save photo");
     } finally {
